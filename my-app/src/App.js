@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
-import { InfluxChart } from "./components/InfluxChart";
+import { WaterFlowChart } from "./components/waterFlowChart";
+import {TemperatureChart} from "./components/TemperatureChart";
+import { WaterLevelChart } from './components/WaterLevelChart';
 
 function App() {
   return (
@@ -20,7 +22,12 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <InfluxChart />
+      <div className="grid-container">
+        <div id="chart1"><WaterFlowChart /></div>
+        <div id="chart2"><WaterLevelChart /></div>
+        <div id="chart3"><TemperatureChart /></div>
+      </div>
+
     </div>
   );
 }
