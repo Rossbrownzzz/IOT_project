@@ -2,7 +2,13 @@ import influxdb_client, os, time
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 import pyrebase as py
+import RPi.GPIO as GPIO
+import time
+import subprocess
 
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(7, GPIO.IN)
+input = GPIO.input(7)
 
 def sendValue(field: str, fieldVal: int):
     point = (
@@ -10,16 +16,14 @@ def sendValue(field: str, fieldVal: int):
         .tag("location", "tank1")
         .field(field, fieldVal)
     )
-    count = count + 1
     write_api.write(bucket=bucket, org=org, record=point)
     
-    print("setValue To", count)
 
 
 
 if __name__ == '__main__':
   # init variables
-  token = os.environ.get("INFLUXDB_TOKEN")
+  token = ""  ########################################################################CHANGE THIS
   org = "benjamin-lange@uiowa.edu"
   url = "https://us-east-1-1.aws.cloud2.influxdata.com"
 
@@ -48,15 +52,27 @@ if __name__ == '__main__':
   flw = 2
   lvl = 3
 
+  heaterOn = True
   while True:
 
     # get temp from _
     # get flow from IO pin
-    # get waterlevel from 3 IO pins
+    lvl = GPIO.input(7)
 
-    sendValue('temp', tmp)
+    #TODO change this to check firebase
+    if not heaterOnFlag and heaterOn:
+      heaterOn = False
+      subprocess.run("sudo uhubctl -l 1-1 -a 0", shell=True)
+      print("turn off")
+    elif heaterOnFlag and not heaterOn:
+      heaterOn = True
+      subprocess.run("sudo uhubctl -l 1-1 -a 1", shell=True)
+      print("turn on")
+
+
+    #sendValue('temp', tmp)
     time.sleep(1)
-    sendValue('flow', flw)
+    #sendValue('flow', flw)
     time.sleep(1)
     sendValue('water_level', lvl)
     time.sleep(1)
