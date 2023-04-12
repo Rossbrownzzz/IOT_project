@@ -11,7 +11,7 @@ import {
   Label
 } from "recharts";
 
-const token = "__1EXrzqCjtsJZUxn3x6Izx474xL5IdzgwsWCAwNhKxrb7X7e3yh-Ug9jj_-goMrPYFtUcoDaorYIewayFjnoQ=="
+const token = ""
 const url = 'https://us-east-1-1.aws.cloud2.influxdata.com'
 const org = `benjamin-lange@uiowa.edu`
 

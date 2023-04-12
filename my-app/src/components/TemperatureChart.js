@@ -100,7 +100,11 @@ export const TemperatureChart = () => {
         }, []);
         return (
           <div>
-            <h1>Temperature Chart</h1>
+            <h1 x={0}
+                y={0}
+                className="recharts-legend-title-text"
+                textAnchor="start"
+                fill="#333333">Temperature Chart</h1>
             <ComposedChart width={750} height={400} data={data}>
               <CartesianGrid />
               <Tooltip />
