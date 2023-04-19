@@ -96,6 +96,7 @@ function App() {
   const [heaterOn, setHeaterOff] = useState(true);
   const [refillEnabled, setRefillDisabled] = useState(true);
   const [turnHeatOn, turnHeatOff] = useState(true)
+  const [refillOn, turnRefillOff] = useState(true)
   const onChangeValue = (event) => {
     const { value } = event.target;
     // Disable the refill button if "Tokyo" is selected
@@ -122,11 +123,21 @@ function App() {
   };
   const handleRefillClick = () => {
     if(refillEnabled == true){
-      alert('Refilling Tank')
-      //firebase code to send refill trigger (timed out on pi end)
       const updates = {};
-	    updates['fillTank'] = true;
-	    update(ref(database), updates);
+
+      //firebase code to send refill trigger (timed out on pi end)
+      if(refillOn == true){
+        updates['fillTank'] = true;
+	      update(ref(database), updates);
+        alert('Refilling Tank')
+        turnRefillOff(false);
+      }
+      else{
+        updates['fillTank'] = false;
+	      update(ref(database), updates);
+        alert('Stopping Refill')
+        turnRefillOff(true);
+      }
     }
     else{
       alert("Refill Disabled")
@@ -169,7 +180,7 @@ function App() {
             {heaterOn ? 'Turn Heater On/Off' : 'Manual Control Turned Off'}
           </Button>
           <Button onClick={handleRefillClick} disabled={!refillEnabled}>
-                       {refillEnabled ? "Refill Tank": "Manual Control Turned Off"}
+                       {refillEnabled ? "Refill Tank Start/Stop": "Manual Control Turned Off"}
           </Button>
           <Container onChange={onChangeValue}>
             <Label id="london">
