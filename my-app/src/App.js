@@ -10,10 +10,6 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import {getDatabase, ref, onValue, set, update, get } from'firebase/database';
 
-
-
-
-
 const Button = styled.button`
   background-color: black;
   color: white;
@@ -23,7 +19,6 @@ const Button = styled.button`
   margin: 10px 0px;
   cursor: pointer;
 `;
-
 
 export const Container = styled.div`
   background: white;
@@ -100,7 +95,7 @@ const database = getDatabase();
 function App() {
   const [heaterOn, setHeaterOff] = useState(true);
   const [refillEnabled, setRefillDisabled] = useState(true);
-
+  const [turnHeatOn, turnHeatOff] = useState(true)
   const onChangeValue = (event) => {
     const { value } = event.target;
     // Disable the refill button if "Tokyo" is selected
@@ -111,11 +106,17 @@ function App() {
 
     if(value !=  "manual"){
       alert("Automatic settings turned on")
+      const updates = {};
+	    updates['automatic'] = true;
+	    update(ref(database), updates);
       //firebase set automatic flag
     }
     else{
       alert("Disabling automatic settings")
       //firebase deset firebase flag
+      const updates = {};
+	    updates['automatic'] = false;
+	    update(ref(database), updates);
     }
 
   };
@@ -123,6 +124,9 @@ function App() {
     if(refillEnabled == true){
       alert('Refilling Tank')
       //firebase code to send refill trigger (timed out on pi end)
+      const updates = {};
+	    updates['fillTank'] = true;
+	    update(ref(database), updates);
     }
     else{
       alert("Refill Disabled")
@@ -131,8 +135,21 @@ function App() {
 
   const handleHeaterClick = () =>{
     if(heaterOn == true){
-      alert('Heater Turned On')
       //firebase code to send heater on trigger (turn off enabled pi end)
+      const updates = {};
+      if(turnHeatOn == true){
+	      updates['tempOn'] = true;
+	      update(ref(database), updates);
+        alert('Heater Turned On')
+        turnHeatOff(false)
+        
+      }
+      else{
+        updates['tempOn'] = false;
+	      update(ref(database), updates);
+        alert('Heater Turned Off')
+        turnHeatOff(true)
+      }
     }
     else{
       alert("Heater Control Disabled")
@@ -149,7 +166,7 @@ function App() {
         <div id="chart3"><TemperatureChart /></div>
         <div id="chart4">
         <Button onClick={handleHeaterClick} disabled={!heaterOn}>
-            {heaterOn ? 'Turn On Heater' : 'Manual Control Turned Off'}
+            {heaterOn ? 'Turn Heater On/Off' : 'Manual Control Turned Off'}
           </Button>
           <Button onClick={handleRefillClick} disabled={!refillEnabled}>
                        {refillEnabled ? "Refill Tank": "Manual Control Turned Off"}

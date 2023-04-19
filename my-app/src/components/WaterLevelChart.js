@@ -37,6 +37,18 @@ const CustomizedAxisTick = ({ x, y, payload }) => {
      );
     }
 
+function formatYAxis(value) {
+      if(value === 0) return "Empty"
+      if(value > 0 && value < 1) return ""
+      if(value === 1) return "Low"
+      if(value >1 && value <2) return ""
+      if(value === 2) return "Medium"
+      if(value >2 && value <3) return ""
+      if(value ===3) return "High"
+      if( value > 3) return ""
+      return value
+    }
+
 export const WaterLevelChart = () => {
         const [data, setData] = useState([]);
       
@@ -110,11 +122,11 @@ export const WaterLevelChart = () => {
                 dataKey="water_level"
                 dot={false}
               />
-              <XAxis dataKey="name" tick={CustomizedAxisTick}>
+              <XAxis dataKey="name" tick={CustomizedAxisTick}>6
               <Label value="Time" textAnchor="end" angle={0} />
               </XAxis>
-              <YAxis>
-                <Label value="Water Level (m)" angle={-90} position={"middle"} offset={10} />
+              <YAxis interval="preserveStartEnd" domain={[0,4]} tickFormatter={formatYAxis}>
+                <Label value="Water Level" angle={-90} position={"top"} offset={-36} />
               </YAxis>
             </ComposedChart>
           </div>

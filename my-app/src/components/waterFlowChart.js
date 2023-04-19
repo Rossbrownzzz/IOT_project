@@ -37,6 +37,18 @@ const CustomizedAxisTick = ({ x, y, payload }) => {
      );
     }
 
+    function formatYAxis(value) {
+      if(value === 0) return "Blocked"
+      if(value >0 && value <1) return ""
+      if(value === 1) return "Low Flow"
+      if(value >1 && value <2) return ""
+      if(value === 2) return "Medium Flow"
+      if(value >2 && value <3) return ""
+      if(value ===3) return "High Flow"
+      if (value > 3) return ""
+      return value
+    }
+
 export const WaterFlowChart = () => {
         const [data, setData] = useState([]);
       
@@ -113,8 +125,8 @@ export const WaterFlowChart = () => {
               <XAxis dataKey="name" tick={CustomizedAxisTick}>
               <Label value="Time" textAnchor="end" angle={0} />
               </XAxis>
-              <YAxis>
-                <Label value="Flow Rate (m^3/s)" angle={-90} position={"middle"} offset={10} />
+              <YAxis interval="preserveStartEnd" domain={[0,4]} tickFormatter={formatYAxis}>
+                <Label value="Flow Rate" angle={-90} position={"top"} offset={-28} />
               </YAxis>
             </ComposedChart>
           </div>
