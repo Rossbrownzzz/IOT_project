@@ -9,6 +9,11 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import {getDatabase, ref, onValue, set, update, get } from'firebase/database';
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+import { isValidPhoneNumber } from 'react-phone-number-input';
+
+
 
 const Button = styled.button`
   background-color: black;
@@ -121,29 +126,7 @@ function App() {
     }
 
   };
-  const handleRefillClick = () => {
-    if(refillEnabled == true){
-      const updates = {};
-
-      //firebase code to send refill trigger (timed out on pi end)
-      if(refillOn == true){
-        updates['fillTank'] = true;
-	      update(ref(database), updates);
-        alert('Refilling Tank')
-        turnRefillOff(false);
-      }
-      else{
-        updates['fillTank'] = false;
-	      update(ref(database), updates);
-        alert('Stopping Refill')
-        turnRefillOff(true);
-      }
-    }
-    else{
-      alert("Refill Disabled")
-    }
-  };
-
+  
   const handleHeaterClick = () =>{
     if(heaterOn == true){
       //firebase code to send heater on trigger (turn off enabled pi end)
@@ -166,8 +149,22 @@ function App() {
       alert("Heater Control Disabled")
     }
   }
+  const [phoneNumber, setPhoneNumber] = useState('');
 
-
+  const handlePhoneNumberChange = (value) => {
+    setPhoneNumber(value);
+    const updates = {};
+    if(value && isValidPhoneNumber(value)){
+        updates['phoneNumber'] = value;
+	      update(ref(database), updates);
+        alert('Phone Number Submitted, You will now get text alerts about your tank')
+    }
+    else{
+      updates['phoneNumber'] = "";
+	    update(ref(database), updates);
+    }
+    // Do something else with the phone number value, such as update a function
+  }
 
   return (
     <div className="App">
@@ -178,9 +175,6 @@ function App() {
         <div id="chart4">
         <Button onClick={handleHeaterClick} disabled={!heaterOn}>
             {heaterOn ? 'Turn Heater On/Off' : 'Manual Control Turned Off'}
-          </Button>
-          <Button onClick={handleRefillClick} disabled={!refillEnabled}>
-                       {refillEnabled ? "Refill Tank Start/Stop": "Manual Control Turned Off"}
           </Button>
           <Container onChange={onChangeValue}>
             <Label id="london">
@@ -201,6 +195,12 @@ function App() {
               <Paragraph>Both Automatic and Manual</Paragraph>
             </Label>
           </Container>
+          <PhoneInput
+            placeholder="Enter phone number"
+            defaultCountry="US"
+            value={phoneNumber}
+            onChange={handlePhoneNumberChange}
+          />
         </div>
       </div>
      
