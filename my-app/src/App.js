@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
 });
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCx9v34E5MjY584T-2ZsClF8seAYn50N_A",
+  apiKey: "",
   authDomain: "iotfinalproject-5a9e4.firebaseapp.com",
   projectId: "iotfinalproject-5a9e4",
   storageBucket: "iotfinalproject-5a9e4.appspot.com",

@@ -39,7 +39,7 @@ def getFlow():
 
 if __name__ == '__main__':
   # init variables
-  token = "__1EXrzqCjtsJZUxn3x6Izx474xL5IdzgwsWCAwNhKxrb7X7e3yh-Ug9jj_-goMrPYFtUcoDaorYIewayFjnoQ=="  ########################################################################CHANGE THIS
+  token = ""  ########################################################################CHANGE THIS
   org = "benjamin-lange@uiowa.edu"
   url = "https://us-east-1-1.aws.cloud2.influxdata.com"
 
@@ -47,7 +47,7 @@ if __name__ == '__main__':
   bucket="IoTData"
 
   firebaseConfig = {
-    "apiKey": "AIzaSyCx9v34E5MjY584T-2ZsClF8seAYn50N_A", ########################################################################CHANGE THIS
+    "apiKey": "", ########################################################################CHANGE THIS
     "authDomain": "iotfinalproject-5a9e4.firebaseapp.com",
     "databaseURL": "https://iotfinalproject-5a9e4-default-rtdb.firebaseio.com",
     "projectId": "iotfinalproject-5a9e4",
