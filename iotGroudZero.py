@@ -2,10 +2,11 @@ import influxdb_client, os, time
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 import pyrebase as py
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import time
 import subprocess
 import random
+import requests
 
 
 
@@ -18,8 +19,8 @@ def sendValue(field: str, fieldVal: int):
     write_api.write(bucket=bucket, org=org, record=point)
 
 def getFlow():
-  #flw1 = GPIO.input(flowpin1)
-  #flw2 = GPIO.input(flowpin2)
+  flw1 = GPIO.input(flowpin1)
+  flw2 = GPIO.input(flowpin2)
   #################################################################### shouldn't be random
   flw1 = random.randint(0,1)
   flw2 = random.randint(0,1)
@@ -38,7 +39,7 @@ def getFlow():
 
 if __name__ == '__main__':
   # init variables
-  token = ""  ########################################################################CHANGE THIS
+  token = "__1EXrzqCjtsJZUxn3x6Izx474xL5IdzgwsWCAwNhKxrb7X7e3yh-Ug9jj_-goMrPYFtUcoDaorYIewayFjnoQ=="  ########################################################################CHANGE THIS
   org = "benjamin-lange@uiowa.edu"
   url = "https://us-east-1-1.aws.cloud2.influxdata.com"
 
@@ -46,7 +47,7 @@ if __name__ == '__main__':
   bucket="IoTData"
 
   firebaseConfig = {
-    "apiKey": "", ########################################################################CHANGE THIS
+    "apiKey": "AIzaSyCx9v34E5MjY584T-2ZsClF8seAYn50N_A", ########################################################################CHANGE THIS
     "authDomain": "iotfinalproject-5a9e4.firebaseapp.com",
     "databaseURL": "https://iotfinalproject-5a9e4-default-rtdb.firebaseio.com",
     "projectId": "iotfinalproject-5a9e4",
@@ -83,8 +84,9 @@ if __name__ == '__main__':
 
   while True:
     heaterOnFlag = fire.child('tempOn').get().val()
-    
+    phoneNumber = fire.child('phoneNumber').get().val()
     flow =getFlow()
+    alert = True
 
     #lvl1 = GPIO.input(lv1pin)
     #lvl2 = GPIO.input(lv2pin)
@@ -94,7 +96,7 @@ if __name__ == '__main__':
     lvl3 = random.randint(0,1)
 
 
-    #TODO change this to check firebase
+    # #TODO change this to check firebase
     if not heaterOnFlag and heaterOn:
       heaterOn = False
       subprocess.run("sudo uhubctl -l 1-1 -a 0", shell=True)
@@ -104,8 +106,16 @@ if __name__ == '__main__':
       subprocess.run("sudo uhubctl -l 1-1 -a 1", shell=True)
       print("turn on")
 
+    if(phoneNumber != "" and alert):
+      resp = requests.post('https://textbelt.com/text', {
+        'phone': phoneNumber,
+        'message': 'Hello world',
+        'key': 'textbelt',
+      })
+      print(resp.json())
+      alert = False
 
-    #sendValue('temp', tmp)
+    # #sendValue('temp', tmp)
     time.sleep(1)
     sendValue('flow', flow)
     time.sleep(1)

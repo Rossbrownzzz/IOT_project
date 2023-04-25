@@ -4,7 +4,7 @@ import { WaterFlowChart } from "./components/waterFlowChart";
 import {TemperatureChart} from "./components/TemperatureChart";
 import { WaterLevelChart } from './components/WaterLevelChart';
 import styled from 'styled-components'
-import { useState } from 'react';
+import { useState} from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -12,6 +12,8 @@ import {getDatabase, ref, onValue, set, update, get } from'firebase/database';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import { isValidPhoneNumber } from 'react-phone-number-input';
+import {SafeAreaView, StyleSheet, TextInput} from 'react-native';
+
 
 
 
@@ -83,8 +85,18 @@ export const Input = styled.input`
       }
 `;
 
+const styles = StyleSheet.create({
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    width: 350
+  },
+});
+
 const firebaseConfig = {
-  apiKey: "",
+  apiKey: "AIzaSyCx9v34E5MjY584T-2ZsClF8seAYn50N_A",
   authDomain: "iotfinalproject-5a9e4.firebaseapp.com",
   projectId: "iotfinalproject-5a9e4",
   storageBucket: "iotfinalproject-5a9e4.appspot.com",
@@ -99,15 +111,12 @@ const database = getDatabase();
 
 function App() {
   const [heaterOn, setHeaterOff] = useState(true);
-  const [refillEnabled, setRefillDisabled] = useState(true);
   const [turnHeatOn, turnHeatOff] = useState(true)
-  const [refillOn, turnRefillOff] = useState(true)
   const onChangeValue = (event) => {
     const { value } = event.target;
-    // Disable the refill button if "Tokyo" is selected
-    setRefillDisabled(value != 'automatic');
 
-    // Reset the heater button if "London" is selected
+
+    // Reset the heater button if "automatic" is selected
     setHeaterOff(value != 'automatic');
 
     if(value !=  "manual"){
@@ -163,11 +172,45 @@ function App() {
       updates['phoneNumber'] = "";
 	    update(ref(database), updates);
     }
-    // Do something else with the phone number value, such as update a function
   }
+
+  const [waterLevel, onChangeWater] = useState('');
+  const [flowRate, onChangeFlow] = useState('');
+  const [temperature, onChangeTemp] = useState('')
+
+
+  const handleFlow = (event) => {
+    const updates = {};
+    updates['flowRate'] = event.target.value;
+	  update(ref(database), updates);
+    onChangeFlow(event.target.value);
+ 
+  };
+  const handleTemp = (value) => {
+    const updates = {};
+    onChangeTemp(value);
+    if(/^\d+$/.test(value)){
+      updates['temperature'] = Number(value);
+	    update(ref(database), updates);
+    }
+  };
+  const handleWaterLevel = (event) => {
+    const updates = {};
+    updates['waterLevel'] = event.target.value;
+	  update(ref(database), updates);
+    onChangeWater(event.target.value);
+  };
+
+  const handleSignOut = () => {
+
+  };
+
 
   return (
     <div className="App">
+      <Button onClick={handleSignOut}>
+            Sign Out
+          </Button>
       <div className="grid-container">
         <div id="chart1"><WaterFlowChart /></div>
         <div id="chart2"><WaterLevelChart /></div>
@@ -177,30 +220,69 @@ function App() {
             {heaterOn ? 'Turn Heater On/Off' : 'Manual Control Turned Off'}
           </Button>
           <Container onChange={onChangeValue}>
-            <Label id="london">
+            <Label id="automatic">
               <Input type="radio" name="location" id="automatic" value="automatic" />
               <RadioBox />
               <Paragraph>Automatic</Paragraph>
             </Label>
 
-            <Label id="berlin">
+            <Label id="manual">
               <Input type="radio" name="location" id="manual" value="manual" />
               <RadioBox />
               <Paragraph>Manual</Paragraph>
             </Label>
 
-            <Label id="tokyo">
+            <Label id="both">
               <Input type="radio" name="location" id="both" value="both" />
               <RadioBox />
               <Paragraph>Both Automatic and Manual</Paragraph>
             </Label>
           </Container>
-          <PhoneInput
+          <PhoneInput   style={{ width: 200 }}
             placeholder="Enter phone number"
             defaultCountry="US"
             value={phoneNumber}
             onChange={handlePhoneNumberChange}
           />
+          <div style={{textAlign: "left"}}>
+            <p>Phone Number Selected: {phoneNumber}</p>
+          </div>
+          <SafeAreaView>
+          <div style={{textAlign: "left"}}>
+          <p>Water Level Notification Level</p>
+          </div>
+          <select value={waterLevel} onChange={handleWaterLevel} style={{ width: 200 }}>
+
+                <option value="Medium">Medium</option>
+
+                <option value="Low">Low</option>
+
+                <option value="Blocked">Blocked</option>
+
+            </select>
+          <div style={{textAlign: "left"}}>
+            <p>Flow Rate Notification Level</p>
+          </div>
+          <select value={flowRate} onChange={handleFlow} style={{ width: 200 }}>
+
+                <option value="Medium Flow">Medium Flow</option>
+
+                <option value="Low Flow">Low Flow</option>
+
+                <option value="Blocked">Blocked</option>
+
+            </select>
+            <div style={{textAlign: "left"}}>
+              <p>Temperature Notification Level</p>
+            </div>
+          <TextInput
+            style={styles.input}
+            onChangeText={handleTemp}
+            value={temperature}
+            placeholder="Enter Temperature Below Which You Are Notified"
+            keyboardType="numeric"
+            />
+          </SafeAreaView>
         </div>
       </div>
      
