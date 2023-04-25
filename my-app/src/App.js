@@ -17,13 +17,26 @@ import {SafeAreaView, StyleSheet, TextInput} from 'react-native';
 
 
 
-const Button = styled.button`
+const Button2 = styled.button`
   background-color: black;
   color: white;
   font-size: 20px;
   padding: 10px 60px;
   border-radius: 5px;
   margin: 10px 0px;
+  cursor: pointer;
+`;
+
+const SmallBlackButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px 40px;
+  background-color: #000;
+  color: #fff;
+  font-size: 12px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 `;
 
@@ -208,17 +221,17 @@ function App() {
 
   return (
     <div className="App">
-      <Button onClick={handleSignOut}>
+      <SmallBlackButton onClick={handleSignOut} >
             Sign Out
-          </Button>
+          </SmallBlackButton>
       <div className="grid-container">
         <div id="chart1"><WaterFlowChart /></div>
         <div id="chart2"><WaterLevelChart /></div>
         <div id="chart3"><TemperatureChart /></div>
         <div id="chart4">
-        <Button onClick={handleHeaterClick} disabled={!heaterOn}>
+        <Button2 onClick={handleHeaterClick} disabled={!heaterOn}>
             {heaterOn ? 'Turn Heater On/Off' : 'Manual Control Turned Off'}
-          </Button>
+          </Button2>
           <Container onChange={onChangeValue}>
             <Label id="automatic">
               <Input type="radio" name="location" id="automatic" value="automatic" />
