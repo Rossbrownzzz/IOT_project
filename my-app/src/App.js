@@ -4,7 +4,7 @@ import { WaterFlowChart } from "./components/waterFlowChart";
 import {TemperatureChart} from "./components/TemperatureChart";
 import { WaterLevelChart } from './components/WaterLevelChart';
 import styled from 'styled-components'
-import { useState} from 'react';
+import { useState, useEffect} from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -122,6 +122,8 @@ firebase.initializeApp(firebaseConfig);
 
 const database = getDatabase();
 
+
+
 function App() {
   const [heaterOn, setHeaterOff] = useState(true);
   const [turnHeatOn, turnHeatOff] = useState(true)
@@ -218,6 +220,16 @@ function App() {
 
   };
 
+  const [score, setScore] = useState(null);
+  const database = getDatabase();
+  const scoreRef = ref(database, "fishScore");
+  useEffect(() => {
+    onValue(scoreRef, (snapshot) => {
+      let data = snapshot.val();
+      setScore(data);
+    });
+  }, [scoreRef]);
+
 
   return (
     <div className="App">
@@ -289,6 +301,10 @@ function App() {
             placeholder="Enter Temperature Below Which You Are Notified"
             keyboardType="numeric"
             />
+          <div style={{textAlign: "left"}}>
+            <p>Fish Score: {score}</p>
+          </div>
+
           </SafeAreaView>
         </div>
       </div>
