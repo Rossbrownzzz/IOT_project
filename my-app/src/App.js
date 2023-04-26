@@ -244,12 +244,6 @@ function App() {
               <RadioBox />
               <Paragraph>Manual</Paragraph>
             </Label>
-
-            <Label id="both">
-              <Input type="radio" name="location" id="both" value="both" />
-              <RadioBox />
-              <Paragraph>Both Automatic and Manual</Paragraph>
-            </Label>
           </Container>
           <PhoneInput   style={{ width: 200 }}
             placeholder="Enter phone number"
@@ -266,11 +260,11 @@ function App() {
           </div>
           <select value={waterLevel} onChange={handleWaterLevel} style={{ width: 200 }}>
 
-                <option value="Medium">Medium</option>
+                <option value="2">Medium</option>
 
-                <option value="Low">Low</option>
+                <option value="1">Low</option>
 
-                <option value="Blocked">Blocked</option>
+                <option value="0">Blocked</option>
 
             </select>
           <div style={{textAlign: "left"}}>
@@ -278,11 +272,11 @@ function App() {
           </div>
           <select value={flowRate} onChange={handleFlow} style={{ width: 200 }}>
 
-                <option value="Medium Flow">Medium Flow</option>
+                <option value="2">Medium Flow</option>
 
-                <option value="Low Flow">Low Flow</option>
+                <option value="1">Low Flow</option>
 
-                <option value="Blocked">Blocked</option>
+                <option value="0">Blocked</option>
 
             </select>
             <div style={{textAlign: "left"}}>
